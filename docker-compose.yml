@@ -1,0 +1,96 @@
+version: "3.9"
+
+services:
+  gateway:
+    image: nginx:latest
+    container_name: gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - auth-service
+      - trips-service
+    networks:
+      - domi-net
+
+  auth-service:
+    build: ./docker/php
+    container_name: auth-service
+    volumes:
+      - ./services/auth-service:/var/www
+    working_dir: /var/www
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    depends_on:
+      - auth-db
+      - redis
+    networks:
+      - domi-net
+
+  trips-service:
+    build: ./docker/php
+    container_name: trips-service
+    volumes:
+      - ./services/trips-service:/var/www
+    working_dir: /var/www
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    depends_on:
+      - trips-db
+      - redis
+      - rabbitmq
+    networks:
+      - domi-net
+
+  auth-db:
+    image: mysql:8
+    container_name: auth-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: auth_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - auth-db-data:/var/lib/mysql
+    networks:
+      - domi-net
+
+  trips-db:
+    image: mysql:8
+    container_name: trips-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: trips_db
+    ports:
+      - "3308:3306"
+    volumes:
+      - trips-db-data:/var/lib/mysql
+    networks:
+      - domi-net
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - domi-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - domi-net
+
+networks:
+  domi-net:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+  trips-db-data:
