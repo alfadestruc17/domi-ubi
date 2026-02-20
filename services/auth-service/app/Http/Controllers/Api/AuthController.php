@@ -56,7 +56,11 @@ class AuthController extends Controller
             return response()->json(['error' => 'Credenciales inválidas'], 401);
         }
 
-        $user = auth('api')->user();
+        // Obtener usuario por email; auth('api')->user() puede ser null con el guard JWT tras attempt()
+        $user = User::query()->where('email', $credentials['email'])->first();
+        if (! $user) {
+            return response()->json(['error' => 'Credenciales inválidas'], 401);
+        }
 
         return response()->json([
             'message' => 'Login correcto',
@@ -73,6 +77,9 @@ class AuthController extends Controller
     public function validateToken(): JsonResponse
     {
         $user = auth('api')->user();
+        if (! $user) {
+            return response()->json(['valid' => false, 'error' => 'Token inválido'], 401);
+        }
 
         return response()->json([
             'valid' => true,
