@@ -7,6 +7,7 @@ export const ROUTES = {
   auth: {
     register: '/auth/api/register',
     login: '/auth/api/login',
+    forgotPassword: '/auth/api/forgot-password',
     validateToken: '/auth/api/validate-token',
     logout: '/auth/api/logout',
   },

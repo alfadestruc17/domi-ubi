@@ -61,6 +61,9 @@ export default function Login() {
               autoComplete="current-password"
             />
           </label>
+          <p className="auth-forgot">
+            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+          </p>
           <button type="submit" disabled={loading}>
             {loading ? 'Entrando…' : 'Entrar'}
           </button>
