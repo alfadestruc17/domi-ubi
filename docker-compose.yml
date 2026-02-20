@@ -12,6 +12,7 @@ services:
       - auth-service
       - trips-service
       - users-service
+      - drivers-service
     networks:
       - domi-net
 
@@ -56,6 +57,20 @@ services:
     networks:
       - domi-net
 
+  drivers-service:
+    build: ./docker/php
+    container_name: drivers-service
+    volumes:
+      - ./services/drivers-service:/var/www
+    working_dir: /var/www
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    depends_on:
+      - drivers-db
+      - redis
+      - auth-service
+    networks:
+      - domi-net
+
   auth-db:
     image: mysql:8
     container_name: auth-db
@@ -95,6 +110,19 @@ services:
     networks:
       - domi-net
 
+  drivers-db:
+    image: mysql:8
+    container_name: drivers-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drivers_db
+    ports:
+      - "3310:3306"
+    volumes:
+      - drivers-db-data:/var/lib/mysql
+    networks:
+      - domi-net
+
   redis:
     image: redis:alpine
     container_name: redis
@@ -123,3 +151,4 @@ volumes:
   auth-db-data:
   trips-db-data:
   users-db-data:
+  drivers-db-data:

@@ -233,29 +233,29 @@ Las fases 3 (Docker) y 13 (Gateway) ya están iniciadas en el repo; se irán com
 |------|----------------|
 | **1** | Alcance MVP definido (actores, flujo, sin Uber completo). |
 | **2** | Arquitectura definida: 5 servicios, cada uno Laravel independiente. |
-| **3** | Docker: `docker-compose` con gateway, auth, trips, **users**, auth-db, trips-db, **users-db**, Redis, RabbitMQ. PHP 8.4. |
-| **4** | Servicios Laravel creados: **auth-service**, **trips-service**, **users-service**. |
+| **3** | Docker: `docker-compose` con gateway, auth, trips, users, **drivers**, auth-db, trips-db, users-db, **drivers-db**, Redis, RabbitMQ. PHP 8.4. |
+| **4** | Servicios Laravel creados: **auth-service**, **trips-service**, **users-service**, **drivers-service**. |
 | **5** | **Auth Service** completo: registro, login, JWT, validate-token, logout. MySQL en .env. |
 | **6** | **Users Service**: perfil (GET/PUT), roles (customer/driver), validación JWT vía Auth Service. |
+| **7** | **Drivers Service**: disponibilidad (online/offline), ubicación, Redis (presencia). |
 | **8** | **Trips Service**: proyecto Laravel creado; BD MySQL; sin lógica de viajes aún. |
-| **13** | **API Gateway**: Nginx con `/auth`, `/trips` y **`/users`**. |
+| **13** | **API Gateway**: Nginx con `/auth`, `/trips`, `/users` y **`/drivers`**. |
 
 ### 🔲 Falta por hacer
 
 | Fase | Qué falta |
 |------|-----------|
-| **4** | Crear proyectos Laravel: **drivers-service**, **realtime-service**. |
-| **7** | **Drivers Service**: disponibilidad (online/offline), ubicación, Redis/eventos. |
+| **4** | Crear proyecto Laravel: **realtime-service**. |
 | **8** | **Trips Service**: lógica de negocio (estados requested → completed/cancelled, asignar conductor). |
 | **9** | **Realtime Service**: WebSockets (Reverb/Pusher), broadcast (TripStatusChanged, etc.). |
 | **10** | Comunicación: Trips → Auth (validar JWT), Trips → Users/Drivers (HTTP); luego eventos RabbitMQ/Redis. |
 | **11** | Redis: seguir usando para cache/session; luego presencia conductores y estado en vivo. |
 | **12** | Frontend React: login, mapa, solicitud viaje, vista conductor, estados en vivo. |
-| **13** | Gateway: añadir rutas `/drivers` y `/realtime` cuando existan esos servicios. |
+| **13** | Gateway: añadir ruta `/realtime` cuando exista el servicio. |
 
 ### Próximo paso recomendado
 
-**Fase 4 + Fase 7:** Crear **drivers-service** (Laravel), añadirlo a Docker y al gateway, e implementar disponibilidad (online/offline) y ubicación (Redis opcional en esta iteración).
+**Fase 4 + Fase 9:** Crear **realtime-service** (Laravel + Reverb/Pusher) para WebSockets y broadcast de eventos.
 
 ---
 

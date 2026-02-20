@@ -17,6 +17,7 @@ domi-ubi/
 └── services/
     ├── auth-service/       # Registro, login, JWT, validación de token
     ├── users-service/      # Perfil, roles (cliente/conductor), valida JWT con Auth
+    ├── drivers-service/    # Disponibilidad (online/offline), ubicación, Redis presencia
     └── trips-service/      # Viajes (pendiente lógica de negocio)
 ```
 
@@ -67,6 +68,15 @@ copy .env.docker.example .env
 
 Ajusta `DB_HOST=users-db`, `DB_DATABASE=users_db`, `AUTH_SERVICE_URL=http://auth-service:8000`.
 
+**Drivers Service**
+
+```bash
+cd services/drivers-service
+copy .env.docker.example .env
+```
+
+Ajusta `DB_HOST=drivers-db`, `DB_DATABASE=drivers_db`, `AUTH_SERVICE_URL=http://auth-service:8000`, `REDIS_HOST=redis`.
+
 ### 2. Construir y levantar contenedores
 
 Desde la **raíz del proyecto** (donde está `docker-compose.yml`):
@@ -109,9 +119,21 @@ php artisan migrate --force
 exit
 ```
 
+**Drivers Service**
+
+```bash
+docker exec -it drivers-service bash
+composer install --no-interaction
+php artisan key:generate
+php artisan migrate --force
+exit
+```
+
 ### 3. URLs vía Gateway
 
 - **Auth:** `http://localhost/auth/api/register`, `http://localhost/auth/api/login`, `http://localhost/auth/api/validate-token`
+- **Users:** `http://localhost/users/api/profile` (GET/PUT con JWT)
+- **Drivers:** `http://localhost/drivers/api/drivers/me`, `http://localhost/drivers/api/drivers/available`, etc.
 - **Trips:** `http://localhost/trips/up` (health)
 - **RabbitMQ UI:** `http://localhost:15672` (usuario/contraseña: guest/guest)
 
@@ -159,6 +181,19 @@ Bajo el prefijo **`/users`** (p. ej. `http://localhost/users/api/...`). Todas la
 | PUT    | `/api/profile` | Crear o actualizar perfil (name, email, phone, role) |
 
 **Roles:** `customer` (cliente) o `driver` (conductor). Ejemplo de body para PUT: `{"name":"Juan","phone":"+573001234567","role":"driver"}`.
+
+## Drivers Service — Endpoints
+
+Bajo el prefijo **`/drivers`** (p. ej. `http://localhost/drivers/api/...`). Rutas con JWT requieren **Authorization: Bearer &lt;token&gt;** (validado con Auth Service).
+
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| GET | `/api/drivers/available` | Listar conductores disponibles (desde Redis) | No |
+| GET | `/api/drivers/me` | Mi estado como conductor | Sí |
+| PUT | `/api/drivers/me/availability` | Poner online/offline. Body: `{"available": true, "latitude": 4.6, "longitude": -74.1}` | Sí |
+| PUT | `/api/drivers/me/location` | Actualizar ubicación. Body: `{"latitude": 4.6, "longitude": -74.1}` | Sí |
+
+Al ponerse **online** se crea el registro en BD y en Redis (presencia). La ubicación se guarda en MySQL y en Redis para consultas rápidas.
 
 ## Orden de implementación recomendado
 
