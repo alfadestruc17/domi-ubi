@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { echo } from '../config/echo'
+import { getEcho } from '../config/echo'
 import { api } from '../services/api'
 import { ROUTES } from '../config/api'
 import { useAuth } from '../contexts/AuthContext'
@@ -38,13 +38,14 @@ export default function TripView() {
 
   useEffect(() => {
     if (!id || isNaN(tripId)) return
+    const echo = getEcho()
     const channel = echo.channel(`trip.${id}`)
     channel.listen('.TripStatusChanged', (payload: { trip_id: number; status: string }) => {
       setTrip((prev) => (prev && prev.id === payload.trip_id ? { ...prev, status: payload.status } : prev))
       api.get<{ trip: Trip }>(ROUTES.trips.show(tripId)).then(({ data }) => setTrip(data.trip)).catch(() => {})
     })
     return () => {
-      echo.leave(`trip.${id}`)
+      getEcho().leave(`trip.${id}`)
     }
   }, [id, tripId])
 

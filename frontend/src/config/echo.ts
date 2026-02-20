@@ -12,20 +12,30 @@ window.Pusher = Pusher
 const host = window.location.hostname
 const port = window.location.port || '80'
 const scheme = window.location.protocol === 'https:' ? 'https' : 'http'
-// En dev (puerto 5173) el navegador conecta a 5173 y Vite hace proxy de /app a :80
 const wsPort = port === '5173' ? 5173 : parseInt(port, 10) || 80
 
-export const echo = new Echo({
-  broadcaster: 'reverb',
-  key: 'domi-ubi-key',
-  wsHost: host,
-  wsPort,
-  wssPort: 443,
-  forceTLS: scheme === 'https',
-  enabledTransports: ['ws', 'wss'],
-  disableStats: true,
-  wsPath: '/app',
-})
+// Pusher-js construye path como (wsPath || '') + '/app/' + key. Si wsPath es '/app' sale /app/app/key.
+// Dejar wsPath vacío para que el path sea /app/domi-ubi-key (el proxy /app y Reverb lo aceptan).
+let echoInstance: ReturnType<typeof Echo> | null = null
+
+export function getEcho(): ReturnType<typeof Echo> {
+  if (!echoInstance) {
+    echoInstance = new Echo({
+      broadcaster: 'reverb',
+      key: 'domi-ubi-key',
+      wsHost: host,
+      wsPort,
+      wssPort: 443,
+      forceTLS: scheme === 'https',
+      enabledTransports: ['ws', 'wss'],
+      disableStats: true,
+      wsPath: '', // vacío para que pusher-js genere /app/key y no /app/app/key
+    })
+  }
+  return echoInstance
+}
+
+// No exportar una instancia aquí: así Echo solo se conecta al montar TripView/DriverDashboard, no en login.
 
 export function getEchoConfig() {
   const wsScheme = scheme === 'https' ? 'wss' : 'ws'

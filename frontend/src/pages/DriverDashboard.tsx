@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../services/api'
 import { ROUTES } from '../config/api'
-import { echo } from '../config/echo'
+import { getEcho } from '../config/echo'
 import type { Trip } from '../types'
 import type { DriverPresence } from '../types'
 import './DriverDashboard.css'
@@ -42,6 +42,7 @@ export default function DriverDashboard() {
   }, [])
 
   useEffect(() => {
+    const echo = getEcho()
     const ch = echo.channel('drivers')
     ch.listen('.DriverLocationUpdated', () => loadDrivers())
     ch.listen('.DriverAvailabilityChanged', () => loadDrivers())

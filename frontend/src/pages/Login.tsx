@@ -19,11 +19,16 @@ export default function Login() {
       await login(email, password)
       navigate('/', { replace: true })
     } catch (err: unknown) {
-      const msg = err && typeof err === 'object' && 'response' in err
-        ? (err as { response?: { data?: { error?: string; message?: string } } }).response?.data?.error
-          || (err as { response?: { data?: { message?: string } } }).response?.data?.message
-        : 'Error al iniciar sesión'
-      setError(String(msg))
+      const ax = err as { response?: { status?: number; data?: { error?: string; message?: string } }; message?: string }
+      let msg: string
+      if (!ax.response) {
+        msg = 'No se pudo conectar. ¿Está el backend en marcha? (docker-compose up -d y luego .\\scripts\\start-fresh.ps1)'
+      } else if (ax.response.status === 500) {
+        msg = 'Error del servidor (500). ¿Ejecutaste el setup? En la raíz del proyecto: .\\scripts\\start-fresh.ps1'
+      } else {
+        msg = ax.response?.data?.error ?? ax.response?.data?.message ?? 'Error al iniciar sesión'
+      }
+      setError(msg)
     } finally {
       setLoading(false)
     }

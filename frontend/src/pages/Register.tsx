@@ -25,9 +25,17 @@ export default function Register() {
       await register(name, email, password, password_confirmation)
       navigate('/', { replace: true })
     } catch (err: unknown) {
-      const ax = err as { response?: { data?: { error?: string; message?: unknown } } }
-      const msg = ax.response?.data?.error ?? (typeof ax.response?.data?.message === 'string' ? ax.response.data.message : 'Error al registrarse')
-      setError(String(msg))
+      const ax = err as { response?: { status?: number; data?: { error?: string; message?: unknown } } }
+      let msg: string
+      if (!ax.response) {
+        msg = 'No se pudo conectar. ¿Está el backend en marcha? (docker-compose up -d y .\\scripts\\start-fresh.ps1)'
+      } else if (ax.response.status === 500) {
+        msg = 'Error del servidor (500). ¿Ejecutaste el setup? En la raíz: .\\scripts\\start-fresh.ps1'
+      } else {
+        const res = ax.response?.data
+        msg = res?.error ?? (typeof res?.message === 'string' ? res.message : 'Error al registrarse')
+      }
+      setError(msg)
     } finally {
       setLoading(false)
     }
