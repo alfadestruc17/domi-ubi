@@ -2,6 +2,8 @@
 
 Proyecto de microservicios tipo Uber/Domi: Auth, Trips (y futuros Users, Drivers, Realtime). Cada servicio es una aplicación Laravel independiente. Se usa **JWT** para autenticación y **Docker** para el entorno.
 
+**Plan de trabajo:** el desarrollo sigue **13 fases** definidas en **[docs/PLAN-DE-TRABAJO.md](docs/PLAN-DE-TRABAJO.md)**. Ahí está el alcance del MVP, los 5 servicios, el orden de implementación y el estado de cada fase.
+
 ## Estructura
 
 ```
@@ -9,7 +11,7 @@ domi-ubi/
 ├── docker-compose.yml      # Orquestación: gateway, auth, trips, MySQL, Redis, RabbitMQ
 ├── docker/
 │   └── php/
-│       └── Dockerfile      # Imagen PHP 8.2-FPM para Laravel
+│       └── Dockerfile      # Imagen PHP 8.4-FPM para Laravel
 ├── gateway/
 │   └── nginx.conf          # API Gateway (proxy a cada servicio)
 └── services/
@@ -20,7 +22,7 @@ domi-ubi/
 ## Requisitos
 
 - Docker y Docker Compose
-- (Opcional) PHP 8.2+ y Composer para desarrollo local
+- (Opcional) PHP 8.4+ y Composer para desarrollo local
 
 ## Levantar con Docker
 
@@ -129,12 +131,7 @@ curl -X POST http://localhost/auth/api/validate-token \
 
 ## Orden de implementación recomendado
 
-1. **Auth Service** (hecho: registro, login, JWT, validate-token)
-2. **Users Service** (perfil, roles cliente/conductor)
-3. **Drivers Service** (disponibilidad, ubicación)
-4. **Trips Service** (crear viaje, estados, asignar conductor)
-5. **Realtime Service** (WebSockets, notificaciones)
-6. **Frontend** (React u otro)
+Ver **[docs/PLAN-DE-TRABAJO.md](docs/PLAN-DE-TRABAJO.md)** (Fases 5–13). Resumen: 1) Auth ✅ 2) Users 3) Drivers 4) Trips 5) Realtime 6) Frontend.
 
 ## Desarrollo local sin Docker
 
