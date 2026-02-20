@@ -40,6 +40,8 @@ services:
       - trips-db
       - redis
       - rabbitmq
+      - auth-service
+      - drivers-service
     networks:
       - domi-net
 

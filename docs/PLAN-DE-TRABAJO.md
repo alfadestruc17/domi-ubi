@@ -238,7 +238,7 @@ Las fases 3 (Docker) y 13 (Gateway) ya están iniciadas en el repo; se irán com
 | **5** | **Auth Service** completo: registro, login, JWT, validate-token, logout. MySQL en .env. |
 | **6** | **Users Service**: perfil (GET/PUT), roles (customer/driver), validación JWT vía Auth Service. |
 | **7** | **Drivers Service**: disponibilidad (online/offline), ubicación, Redis (presencia). |
-| **8** | **Trips Service**: proyecto Laravel creado; BD MySQL; sin lógica de viajes aún. |
+| **8** | **Trips Service**: crear viaje, estados (requested → searching_driver → driver_assigned → in_progress → completed/cancelled), asignar conductor, integración con Auth y Drivers. |
 | **13** | **API Gateway**: Nginx con `/auth`, `/trips`, `/users` y **`/drivers`**. |
 
 ### 🔲 Falta por hacer
@@ -246,7 +246,6 @@ Las fases 3 (Docker) y 13 (Gateway) ya están iniciadas en el repo; se irán com
 | Fase | Qué falta |
 |------|-----------|
 | **4** | Crear proyecto Laravel: **realtime-service**. |
-| **8** | **Trips Service**: lógica de negocio (estados requested → completed/cancelled, asignar conductor). |
 | **9** | **Realtime Service**: WebSockets (Reverb/Pusher), broadcast (TripStatusChanged, etc.). |
 | **10** | Comunicación: Trips → Auth (validar JWT), Trips → Users/Drivers (HTTP); luego eventos RabbitMQ/Redis. |
 | **11** | Redis: seguir usando para cache/session; luego presencia conductores y estado en vivo. |
@@ -255,7 +254,7 @@ Las fases 3 (Docker) y 13 (Gateway) ya están iniciadas en el repo; se irán com
 
 ### Próximo paso recomendado
 
-**Fase 4 + Fase 9:** Crear **realtime-service** (Laravel + Reverb/Pusher) para WebSockets y broadcast de eventos.
+**Fase 4 + Fase 9:** Crear **realtime-service** (Laravel Reverb o Pusher) para WebSockets y broadcast (TripStatusChanged, DriverAssigned, etc.).
 
 ---
 

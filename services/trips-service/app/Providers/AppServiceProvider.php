@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\AuthServiceClient;
+use App\Services\DriversServiceClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(AuthServiceClient::class, function (): AuthServiceClient {
+            return new AuthServiceClient(config('services.auth_service_url'));
+        });
+
+        $this->app->singleton(DriversServiceClient::class, function (): DriversServiceClient {
+            return new DriversServiceClient(config('services.drivers_service_url'));
+        });
     }
 
     /**

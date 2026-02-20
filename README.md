@@ -18,7 +18,7 @@ domi-ubi/
     ├── auth-service/       # Registro, login, JWT, validación de token
     ├── users-service/      # Perfil, roles (cliente/conductor), valida JWT con Auth
     ├── drivers-service/    # Disponibilidad (online/offline), ubicación, Redis presencia
-    └── trips-service/      # Viajes (pendiente lógica de negocio)
+    └── trips-service/      # Viajes: crear, estados, asignar conductor (Fase 8)
 ```
 
 ## Requisitos
@@ -57,7 +57,7 @@ cd services/trips-service
 copy .env.docker.example .env
 ```
 
-Ajusta `DB_HOST=trips-db`, `DB_DATABASE=trips_db`, y `REDIS_HOST=redis`.
+Ajusta `DB_HOST=trips-db`, `DB_DATABASE=trips_db`, `REDIS_HOST=redis`, `AUTH_SERVICE_URL=http://auth-service:8000`, `DRIVERS_SERVICE_URL=http://drivers-service:8000`.
 
 **Users Service**
 
@@ -134,7 +134,7 @@ exit
 - **Auth:** `http://localhost/auth/api/register`, `http://localhost/auth/api/login`, `http://localhost/auth/api/validate-token`
 - **Users:** `http://localhost/users/api/profile` (GET/PUT con JWT)
 - **Drivers:** `http://localhost/drivers/api/drivers/me`, `http://localhost/drivers/api/drivers/available`, etc.
-- **Trips:** `http://localhost/trips/up` (health)
+- **Trips:** `http://localhost/trips/api/trips` (crear/listar viajes con JWT), `http://localhost/trips/up` (health)
 - **RabbitMQ UI:** `http://localhost:15672` (usuario/contraseña: guest/guest)
 
 ## Auth Service — Endpoints (JWT)
@@ -194,6 +194,20 @@ Bajo el prefijo **`/drivers`** (p. ej. `http://localhost/drivers/api/...`). Ruta
 | PUT | `/api/drivers/me/location` | Actualizar ubicación. Body: `{"latitude": 4.6, "longitude": -74.1}` | Sí |
 
 Al ponerse **online** se crea el registro en BD y en Redis (presencia). La ubicación se guarda en MySQL y en Redis para consultas rápidas.
+
+## Trips Service — Endpoints (Fase 8)
+
+Bajo el prefijo **`/trips`**. Todas las rutas requieren **Authorization: Bearer &lt;token&gt;** (validado con Auth Service).
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/api/trips` | Crear viaje (pasajero). Body: `origin_latitude`, `origin_longitude`, `destination_latitude`, `destination_longitude`, opcional `origin_address`, `destination_address`. Estado inicial: requested → searching_driver. |
+| GET | `/api/trips` | Listar mis viajes (como pasajero o conductor). |
+| GET | `/api/trips/available-drivers` | Conductores disponibles (consulta al Drivers Service). |
+| GET | `/api/trips/{id}` | Ver un viaje (solo si eres pasajero o conductor). |
+| PUT | `/api/trips/{id}/status` | Cambiar estado. Body: `{"action": "accept"|"start"|"complete"|"cancel"}`. **accept** = conductor acepta; **start** = conductor inicia; **complete** = conductor finaliza; **cancel** = pasajero o conductor cancela. |
+
+**Estados del viaje:** `requested` → `searching_driver` → `driver_assigned` → `in_progress` → `completed` o `cancelled`.
 
 ## Orden de implementación recomendado
 
