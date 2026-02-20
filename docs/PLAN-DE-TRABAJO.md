@@ -227,22 +227,36 @@ Las fases 3 (Docker) y 13 (Gateway) ya están iniciadas en el repo; se irán com
 
 ## Resumen de estado (referencia)
 
-| Fase | Descripción | Estado |
-|------|-------------|--------|
-| 1 | Alcance MVP | Definido |
-| 2 | Arquitectura microservicios | Definida |
-| 3 | Entorno Docker | En uso (gateway, auth, trips, MySQL, Redis, RabbitMQ) |
-| 4 | Crear servicios Laravel | Auth y Trips creados; faltan Users, Drivers, Realtime |
-| 5 | Auth Service | Hecho (JWT, register, login, validate-token) |
-| 6 | Users Service | Pendiente |
-| 7 | Drivers Service | Pendiente |
-| 8 | Trips Service | Estructura lista; lógica de negocio pendiente |
-| 9 | Realtime Service | Pendiente |
-| 10 | Comunicación entre servicios | Parcial (HTTP; eventos pendientes) |
-| 11 | Redis | En uso (cache/session); ampliar para presencia/estado |
-| 12 | Frontend React | Pendiente |
-| 13 | API Gateway | Nginx configurado; ampliar con nuevos servicios |
+### ✅ Hecho
+
+| Fase | Qué está hecho |
+|------|----------------|
+| **1** | Alcance MVP definido (actores, flujo, sin Uber completo). |
+| **2** | Arquitectura definida: 5 servicios, cada uno Laravel independiente. |
+| **3** | Docker: `docker-compose` con gateway, auth, trips, **users**, auth-db, trips-db, **users-db**, Redis, RabbitMQ. PHP 8.4. |
+| **4** | Servicios Laravel creados: **auth-service**, **trips-service**, **users-service**. |
+| **5** | **Auth Service** completo: registro, login, JWT, validate-token, logout. MySQL en .env. |
+| **6** | **Users Service**: perfil (GET/PUT), roles (customer/driver), validación JWT vía Auth Service. |
+| **8** | **Trips Service**: proyecto Laravel creado; BD MySQL; sin lógica de viajes aún. |
+| **13** | **API Gateway**: Nginx con `/auth`, `/trips` y **`/users`**. |
+
+### 🔲 Falta por hacer
+
+| Fase | Qué falta |
+|------|-----------|
+| **4** | Crear proyectos Laravel: **drivers-service**, **realtime-service**. |
+| **7** | **Drivers Service**: disponibilidad (online/offline), ubicación, Redis/eventos. |
+| **8** | **Trips Service**: lógica de negocio (estados requested → completed/cancelled, asignar conductor). |
+| **9** | **Realtime Service**: WebSockets (Reverb/Pusher), broadcast (TripStatusChanged, etc.). |
+| **10** | Comunicación: Trips → Auth (validar JWT), Trips → Users/Drivers (HTTP); luego eventos RabbitMQ/Redis. |
+| **11** | Redis: seguir usando para cache/session; luego presencia conductores y estado en vivo. |
+| **12** | Frontend React: login, mapa, solicitud viaje, vista conductor, estados en vivo. |
+| **13** | Gateway: añadir rutas `/drivers` y `/realtime` cuando existan esos servicios. |
+
+### Próximo paso recomendado
+
+**Fase 4 + Fase 7:** Crear **drivers-service** (Laravel), añadirlo a Docker y al gateway, e implementar disponibilidad (online/offline) y ubicación (Redis opcional en esta iteración).
 
 ---
 
-*Documento vivo: actualizar la tabla de estado según se avance en cada fase.*
+*Documento vivo: actualizar esta sección según se avance.*

@@ -8,14 +8,15 @@ Proyecto de microservicios tipo Uber/Domi: Auth, Trips (y futuros Users, Drivers
 
 ```
 domi-ubi/
-├── docker-compose.yml      # Orquestación: gateway, auth, trips, MySQL, Redis, RabbitMQ
+├── docker-compose.yml      # Orquestación: gateway, auth, trips, users, MySQL, Redis, RabbitMQ
 ├── docker/
 │   └── php/
 │       └── Dockerfile      # Imagen PHP 8.4-FPM para Laravel
 ├── gateway/
-│   └── nginx.conf          # API Gateway (proxy a cada servicio)
+│   └── nginx.conf          # API Gateway (/auth, /trips, /users)
 └── services/
     ├── auth-service/       # Registro, login, JWT, validación de token
+    ├── users-service/      # Perfil, roles (cliente/conductor), valida JWT con Auth
     └── trips-service/      # Viajes (pendiente lógica de negocio)
 ```
 
@@ -57,6 +58,15 @@ copy .env.docker.example .env
 
 Ajusta `DB_HOST=trips-db`, `DB_DATABASE=trips_db`, y `REDIS_HOST=redis`.
 
+**Users Service**
+
+```bash
+cd services/users-service
+copy .env.docker.example .env
+```
+
+Ajusta `DB_HOST=users-db`, `DB_DATABASE=users_db`, `AUTH_SERVICE_URL=http://auth-service:8000`.
+
 ### 2. Construir y levantar contenedores
 
 Desde la **raíz del proyecto** (donde está `docker-compose.yml`):
@@ -83,6 +93,16 @@ exit
 
 ```bash
 docker exec -it trips-service bash
+composer install --no-interaction
+php artisan key:generate
+php artisan migrate --force
+exit
+```
+
+**Users Service**
+
+```bash
+docker exec -it users-service bash
 composer install --no-interaction
 php artisan key:generate
 php artisan migrate --force
@@ -128,6 +148,17 @@ La respuesta incluye `token`. Para rutas protegidas:
 curl -X POST http://localhost/auth/api/validate-token \
   -H "Authorization: Bearer TU_JWT_AQUI"
 ```
+
+## Users Service — Endpoints (requieren JWT)
+
+Bajo el prefijo **`/users`** (p. ej. `http://localhost/users/api/...`). Todas las rutas requieren **Authorization: Bearer &lt;token&gt;** (el token se valida contra el Auth Service).
+
+| Método | Ruta         | Descripción              |
+|--------|--------------|---------------------------|
+| GET    | `/api/profile` | Ver perfil del usuario   |
+| PUT    | `/api/profile` | Crear o actualizar perfil (name, email, phone, role) |
+
+**Roles:** `customer` (cliente) o `driver` (conductor). Ejemplo de body para PUT: `{"name":"Juan","phone":"+573001234567","role":"driver"}`.
 
 ## Orden de implementación recomendado
 
