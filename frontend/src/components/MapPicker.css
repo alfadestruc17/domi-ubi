@@ -11,6 +11,14 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+.map-picker-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+}
+
 .map-picker-hint {
   margin: 0.5rem 0 0;
   font-size: 0.85rem;
