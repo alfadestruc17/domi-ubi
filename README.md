@@ -17,8 +17,9 @@ domi-ubi/
 └── services/
     ├── auth-service/       # Registro, login, JWT, validación de token
     ├── users-service/      # Perfil, roles (cliente/conductor), valida JWT con Auth
-    ├── drivers-service/    # Disponibilidad (online/offline), ubicación, Redis presencia
-    └── trips-service/      # Viajes: crear, estados, asignar conductor (Fase 8)
+    ├── drivers-service/    # Disponibilidad, ubicación, Redis, broadcast (DriverLocationUpdated, DriverAvailabilityChanged)
+    ├── trips-service/      # Viajes: crear, estados, asignar conductor, broadcast (TripStatusChanged)
+    └── realtime-service/   # Laravel Reverb: WebSockets, canales trip.{id} y drivers
 ```
 
 ## Requisitos
@@ -77,6 +78,15 @@ copy .env.docker.example .env
 
 Ajusta `DB_HOST=drivers-db`, `DB_DATABASE=drivers_db`, `AUTH_SERVICE_URL=http://auth-service:8000`, `REDIS_HOST=redis`.
 
+**Realtime Service**
+
+```bash
+cd services/realtime-service
+copy .env.docker.example .env   # o copia .env y ajusta
+```
+
+Ajusta `REVERB_APP_ID=domi-ubi`, `REVERB_APP_KEY=domi-ubi-key`, `REVERB_APP_SECRET=domi-ubi-secret`, `REVERB_SERVER_HOST=0.0.0.0`, `REVERB_SERVER_PORT=8080`, `REVERB_HOST=realtime-service`, `REVERB_PORT=8080`, `REVERB_SCHEME=http`. Trips y Drivers usan las mismas credenciales y `REVERB_HOST=realtime-service` para emitir eventos.
+
 ### 2. Construir y levantar contenedores
 
 Desde la **raíz del proyecto** (donde está `docker-compose.yml`):
@@ -129,12 +139,25 @@ php artisan migrate --force
 exit
 ```
 
+**Realtime Service**
+
+```bash
+docker exec -it realtime-service bash
+composer install --no-interaction
+php artisan key:generate
+exit
+```
+
+(No usa MySQL; Reverb escucha en el puerto 8080 dentro del contenedor.)
+
 ### 3. URLs vía Gateway
 
 - **Auth:** `http://localhost/auth/api/register`, `http://localhost/auth/api/login`, `http://localhost/auth/api/validate-token`
 - **Users:** `http://localhost/users/api/profile` (GET/PUT con JWT)
 - **Drivers:** `http://localhost/drivers/api/drivers/me`, `http://localhost/drivers/api/drivers/available`, etc.
 - **Trips:** `http://localhost/trips/api/trips` (crear/listar viajes con JWT), `http://localhost/trips/up` (health)
+- **Realtime (HTTP):** `http://localhost/realtime` (p. ej. broadcasting auth si se usan canales privados)
+- **WebSocket (Reverb):** `ws://localhost/app` (conectar con Laravel Echo; clave: `domi-ubi-key`, host: `localhost`, puerto: 80, path: `/app`, scheme: `ws`)
 - **RabbitMQ UI:** `http://localhost:15672` (usuario/contraseña: guest/guest)
 
 ## Auth Service — Endpoints (JWT)
@@ -207,11 +230,25 @@ Bajo el prefijo **`/trips`**. Todas las rutas requieren **Authorization: Bearer 
 | GET | `/api/trips/{id}` | Ver un viaje (solo si eres pasajero o conductor). |
 | PUT | `/api/trips/{id}/status` | Cambiar estado. Body: `{"action": "accept"|"start"|"complete"|"cancel"}`. **accept** = conductor acepta; **start** = conductor inicia; **complete** = conductor finaliza; **cancel** = pasajero o conductor cancela. |
 
-**Estados del viaje:** `requested` → `searching_driver` → `driver_assigned` → `in_progress` → `completed` o `cancelled`.
+**Estados del viaje:** `requested` → `searching_driver` → `driver_assigned` → `in_progress` → `completed` o `cancelled`. Cada cambio de estado se emite por WebSocket (evento `TripStatusChanged` en el canal `trip.{id}`).
+
+## Realtime Service — WebSockets (Laravel Reverb)
+
+- **URL WebSocket (vía gateway):** `ws://localhost/app`
+- **Credenciales (mismo app en Reverb):** `REVERB_APP_ID=domi-ubi`, `REVERB_APP_KEY=domi-ubi-key`, `REVERB_APP_SECRET=domi-ubi-secret`
+
+**Canales públicos (MVP):**
+
+| Canal       | Eventos                | Descripción |
+|------------|------------------------|-------------|
+| `trip.{id}`| `TripStatusChanged`     | Cambios de estado del viaje (creado, conductor asignado, iniciado, completado, cancelado). |
+| `drivers`  | `DriverLocationUpdated`, `DriverAvailabilityChanged` | Ubicación y disponibilidad de conductores en tiempo real. |
+
+Trips Service y Drivers Service tienen `BROADCAST_CONNECTION=reverb` y las variables `REVERB_*` apuntando a `realtime-service:8080` para enviar eventos al servidor Reverb. El frontend puede usar **Laravel Echo** con el driver **reverb** para suscribirse a estos canales.
 
 ## Orden de implementación recomendado
 
-Ver **[docs/PLAN-DE-TRABAJO.md](docs/PLAN-DE-TRABAJO.md)** (Fases 5–13). Resumen: 1) Auth ✅ 2) Users 3) Drivers 4) Trips 5) Realtime 6) Frontend.
+Ver **[docs/PLAN-DE-TRABAJO.md](docs/PLAN-DE-TRABAJO.md)** (Fases 5–13). Resumen: 1) Auth ✅ 2) Users ✅ 3) Drivers ✅ 4) Trips ✅ 5) Realtime ✅ 6) Frontend (pendiente).
 
 ## Desarrollo local sin Docker
 
@@ -224,4 +261,4 @@ Usa `.env` con SQLite o MySQL local. Para JWT: `php artisan jwt:secret` en auth-
 
 - Cada microservicio tiene su propia base de datos (auth_db, trips_db); no se comparten tablas.
 - El gateway Nginx reescribe `/auth/*` → auth-service y `/trips/*` → trips-service.
-- Los demás servicios (users, drivers, realtime) se pueden añadir al `docker-compose` y al gateway cuando estén listos.
+- Realtime (Reverb) corre en el mismo contenedor que el servidor HTTP del realtime-service; el gateway expone `/realtime` (HTTP) y `/app` (WebSocket).

@@ -13,6 +13,7 @@ services:
       - trips-service
       - users-service
       - drivers-service
+      - realtime-service
     networks:
       - domi-net
 
@@ -42,6 +43,7 @@ services:
       - rabbitmq
       - auth-service
       - drivers-service
+      - realtime-service
     networks:
       - domi-net
 
@@ -70,6 +72,21 @@ services:
       - drivers-db
       - redis
       - auth-service
+      - realtime-service
+    networks:
+      - domi-net
+
+  realtime-service:
+    build: ./docker/php
+    container_name: realtime-service
+    volumes:
+      - ./services/realtime-service:/var/www
+    working_dir: /var/www
+    command: ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=8000 & php artisan reverb:start"]
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
     networks:
       - domi-net
 

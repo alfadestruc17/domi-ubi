@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Events\TripStatusChanged;
 use App\Models\Trip;
 use Illuminate\Support\Facades\DB;
 
@@ -51,7 +52,10 @@ class TripService
 
             $trip->update(['status' => Trip::STATUS_SEARCHING_DRIVER]);
 
-            return $trip->fresh();
+            $trip = $trip->fresh();
+            event(new TripStatusChanged($trip));
+
+            return $trip;
         });
     }
 
@@ -70,7 +74,10 @@ class TripService
             'accepted_at' => now(),
         ]);
 
-        return $trip->fresh();
+        $trip = $trip->fresh();
+        event(new TripStatusChanged($trip));
+
+        return $trip;
     }
 
     /**
@@ -87,7 +94,10 @@ class TripService
             'started_at' => now(),
         ]);
 
-        return $trip->fresh();
+        $trip = $trip->fresh();
+        event(new TripStatusChanged($trip));
+
+        return $trip;
     }
 
     /**
@@ -104,7 +114,10 @@ class TripService
             'completed_at' => now(),
         ]);
 
-        return $trip->fresh();
+        $trip = $trip->fresh();
+        event(new TripStatusChanged($trip));
+
+        return $trip;
     }
 
     /**
@@ -121,7 +134,10 @@ class TripService
             'cancelled_at' => now(),
         ]);
 
-        return $trip->fresh();
+        $trip = $trip->fresh();
+        event(new TripStatusChanged($trip));
+
+        return $trip;
     }
 
     /**

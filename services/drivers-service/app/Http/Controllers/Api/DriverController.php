@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\DriverAvailabilityChanged;
+use App\Events\DriverLocationUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateDriverLocationRequest;
 use App\Models\Driver;
@@ -79,9 +81,11 @@ class DriverController extends Controller
                 'last_location_at' => now(),
             ]);
             $this->presence->setAvailable($driver->auth_user_id, $lat, $lng);
+            event(new DriverAvailabilityChanged($authUserId, true, $lat, $lng));
         } else {
             $driver->setOffline();
             $this->presence->setUnavailable($authUserId);
+            event(new DriverAvailabilityChanged($authUserId, false));
         }
 
         return response()->json([
@@ -113,6 +117,13 @@ class DriverController extends Controller
 
         $driver->updateLocation($latitude, $longitude);
         $this->presence->updateLocation($authUserId, $latitude, $longitude);
+
+        event(new DriverLocationUpdated(
+            $authUserId,
+            $latitude,
+            $longitude,
+            now()->toIso8601String()
+        ));
 
         return response()->json([
             'message' => 'Ubicación actualizada',
