@@ -1,0 +1,15 @@
+.driver-dash { max-width: 560px; }
+.driver-dash h1 { font-size: 1.35rem; margin: 0 0 1rem; color: #fff; }
+.driver-dash-error { padding: 0.6rem; background: rgba(233,69,96,0.2); border-radius: 8px; color: #f8a0ae; margin-bottom: 1rem; }
+.driver-dash-section { margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.04); border-radius: 10px; }
+.driver-dash-section h2 { font-size: 1rem; margin: 0 0 0.5rem; color: rgba(255,255,255,0.9); }
+.driver-dash-section p { color: rgba(255,255,255,0.7); font-size: 0.9rem; margin: 0.25rem 0; }
+.driver-dash-section label { display: block; margin: 0.5rem 0; color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+.driver-dash-section input { margin-left: 0.5rem; padding: 0.4rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; width: 100px; }
+.driver-dash-section button { margin-right: 0.5rem; margin-top: 0.5rem; padding: 0.5rem 1rem; background: #e94560; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.driver-dash-section button:disabled { opacity: 0.7; }
+.driver-dash-empty { color: rgba(255,255,255,0.5); }
+.driver-dash-trips { list-style: none; padding: 0; margin: 0; }
+.driver-dash-trips li { margin-bottom: 0.5rem; }
+.driver-dash-trips a { color: #e94560; text-decoration: none; }
+.driver-dash-trips a:hover { text-decoration: underline; }

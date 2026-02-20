@@ -1,0 +1,67 @@
+.request-trip {
+  max-width: 480px;
+}
+
+.request-trip h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  color: #fff;
+}
+
+.request-trip-desc {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin: 0 0 1.25rem;
+}
+
+.request-trip-form fieldset {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.request-trip-form legend {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.request-trip-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+}
+
+.request-trip-form input {
+  margin-left: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  width: 120px;
+}
+
+.request-trip-form button {
+  padding: 0.65rem 1.25rem;
+  background: #e94560;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.request-trip-form button:disabled {
+  opacity: 0.7;
+}
+
+.request-trip-error {
+  padding: 0.6rem;
+  background: rgba(233, 69, 96, 0.2);
+  border-radius: 8px;
+  color: #f8a0ae;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
