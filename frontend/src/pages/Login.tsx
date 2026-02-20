@@ -36,7 +36,10 @@ export default function Login() {
       if (!ax.response) {
         msg = 'No se pudo conectar. ¿Está el backend en marcha? (docker-compose up -d y luego .\\scripts\\start-fresh.ps1)'
       } else if (ax.response.status === 500) {
-        msg = 'Error del servidor (500). ¿Ejecutaste el setup? En la raíz del proyecto: .\\scripts\\start-fresh.ps1'
+        const serverMsg = ax.response?.data?.message ?? ax.response?.data?.error
+        const hint =
+          'Usa http://localhost:5173 en Cursor y en Brave. Comprueba que Docker esté en marcha y ejecuta en la raíz: .\\scripts\\start-fresh.ps1'
+        msg = serverMsg ? `${serverMsg} — ${hint}` : `Error del servidor (500). ${hint}`
       } else {
         msg = ax.response?.data?.error ?? ax.response?.data?.message ?? 'Error al iniciar sesión'
       }
