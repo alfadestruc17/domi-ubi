@@ -148,7 +148,7 @@ php artisan key:generate
 exit
 ```
 
-(No usa MySQL; Reverb escucha en el puerto 8080 dentro del contenedor.)
+Si prefieres no entrar al contenedor: el **entrypoint** (`docker-entrypoint.sh`) ejecuta `composer install` automáticamente si no existe `vendor/`. Luego arranca en segundo plano `php artisan serve` (puerto 8000) y en primer plano `php artisan reverb:start` (puerto 8080), de modo que Docker envíe señales a Reverb correctamente. No usa MySQL; Reverb escucha en el puerto 8080.
 
 ### 3. URLs vía Gateway
 

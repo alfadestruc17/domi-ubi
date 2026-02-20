@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   gateway:
     image: nginx:latest
@@ -82,7 +80,7 @@ services:
     volumes:
       - ./services/realtime-service:/var/www
     working_dir: /var/www
-    command: ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=8000 & php artisan reverb:start"]
+    command: ["sh", "./docker-entrypoint.sh"]
     ports:
       - "8080:8080"
     depends_on:
