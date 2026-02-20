@@ -19,8 +19,8 @@ export default function DriverDashboard() {
   const [error, setError] = useState('')
 
   const loadTrips = () => {
-    api.get<{ trips: Trip[] }>(ROUTES.trips.list).then(({ data }) => {
-      setTrips(data.trips.filter((t) => t.status === 'searching_driver'))
+    api.get<{ trips: Trip[] }>(ROUTES.trips.available).then(({ data }) => {
+      setTrips(data.trips ?? [])
     }).catch(() => setTrips([]))
   }
 

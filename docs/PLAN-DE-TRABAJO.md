@@ -240,6 +240,7 @@ Las fases 3 (Docker) y 13 (Gateway) ya están iniciadas en el repo; se irán com
 | **7** | **Drivers Service**: disponibilidad (online/offline), ubicación, Redis (presencia), broadcast (DriverLocationUpdated, DriverAvailabilityChanged). |
 | **8** | **Trips Service**: crear viaje, estados, asignar conductor, integración Auth/Drivers, broadcast (TripStatusChanged). |
 | **9** | **Realtime Service**: Laravel Reverb (WebSockets). Canales públicos `trip.{id}` y `drivers`. Trips y Drivers emiten eventos a Reverb. |
+| **12** | **Frontend React** (Vite): login, registro, perfil (rol), solicitud viaje, vista conductor, detalle viaje con Echo (Reverb). |
 | **13** | **API Gateway**: Nginx con `/auth`, `/trips`, `/users`, **`/drivers`**, **`/realtime`** y WebSocket **`/app`** (Reverb). |
 
 ### 🔲 Falta por hacer
@@ -248,11 +249,10 @@ Las fases 3 (Docker) y 13 (Gateway) ya están iniciadas en el repo; se irán com
 |------|-----------|
 | **10** | Comunicación: Trips → Auth (validar JWT), Trips → Users/Drivers (HTTP); luego eventos RabbitMQ/Redis. |
 | **11** | Redis: seguir usando para cache/session; presencia conductores y estado en vivo (parcialmente hecho). |
-| **12** | Frontend React: login, mapa, solicitud viaje, vista conductor, estados en vivo. |
 
 ### Próximo paso recomendado
 
-**Fase 10 / 12:** Refinar comunicación asincrónica (RabbitMQ) o avanzar con **Frontend React** (login, mapa, Echo para WebSockets).
+**Fase 10:** Refinar comunicación asincrónica (RabbitMQ) para eventos entre servicios.
 
 ---
 

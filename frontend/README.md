@@ -1,3 +1,18 @@
+# Domi-Ubi — Frontend
+
+Cliente React (Vite + TypeScript) del MVP Domi-Ubi. Login/registro, perfil (rol pasajero/conductor), solicitud de viaje, panel conductor y detalle de viaje con actualizaciones en tiempo real (Laravel Echo + Reverb).
+
+**Requisitos:** Gateway y servicios backend en marcha (p. ej. `docker-compose up -d` en la raíz del repo).
+
+```bash
+npm install
+npm run dev
+```
+
+Abre `http://localhost:5173`. El proxy de Vite reenvía `/auth`, `/users`, `/trips`, `/drivers`, `/realtime` y `/app` (WebSocket) al gateway en `localhost:80`.
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

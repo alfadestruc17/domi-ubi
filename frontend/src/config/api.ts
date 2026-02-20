@@ -16,6 +16,7 @@ export const ROUTES = {
   trips: {
     list: '/trips/api/trips',
     create: '/trips/api/trips',
+    available: '/trips/api/trips/available',
     show: (id: number) => `/trips/api/trips/${id}`,
     status: (id: number) => `/trips/api/trips/${id}/status`,
     availableDrivers: '/trips/api/trips/available-drivers',

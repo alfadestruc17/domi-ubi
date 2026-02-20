@@ -34,8 +34,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
     try {
-      const { data } = await api.get<{ profile: Profile }>(ROUTES.users.profile)
-      setState((s) => ({ ...s, profile: data.profile }))
+      const { data } = await api.get<{ profile: Profile | null }>(ROUTES.users.profile)
+      setState((s) => ({ ...s, profile: data.profile ?? null }))
     } catch {
       setState((s) => ({ ...s, profile: null }))
     }

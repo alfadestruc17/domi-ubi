@@ -61,13 +61,33 @@ class TripController extends Controller
     }
 
     /**
-     * Ver un viaje (solo si eres pasajero o conductor).
+     * Viajes buscando conductor (para que conductores vean qué pueden aceptar).
+     */
+    public function available(Request $request): JsonResponse
+    {
+        $trips = Trip::query()
+            ->where('status', Trip::STATUS_SEARCHING_DRIVER)
+            ->orderByDesc('created_at')
+            ->limit(20)
+            ->get();
+
+        return response()->json([
+            'trips' => $trips->map(fn (Trip $t) => $this->tripToArray($t)),
+        ]);
+    }
+
+    /**
+     * Ver un viaje (pasajero, conductor asignado, o cualquier usuario si el viaje está buscando conductor).
      */
     public function show(Request $request, Trip $trip): JsonResponse
     {
         $authUserId = (int) $request->attributes->get('auth_user_id');
 
-        if (! $trip->isPassenger($authUserId) && ! $trip->isDriver($authUserId)) {
+        $canView = $trip->isPassenger($authUserId)
+            || $trip->isDriver($authUserId)
+            || $trip->status === Trip::STATUS_SEARCHING_DRIVER;
+
+        if (! $canView) {
             return response()->json(['error' => 'No autorizado para ver este viaje'], 403);
         }
 

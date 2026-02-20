@@ -41,12 +41,12 @@ export default function TripView() {
     const channel = echo.channel(`trip.${id}`)
     channel.listen('.TripStatusChanged', (payload: { trip_id: number; status: string }) => {
       setTrip((prev) => (prev && prev.id === payload.trip_id ? { ...prev, status: payload.status } : prev))
-      fetchTrip()
+      api.get<{ trip: Trip }>(ROUTES.trips.show(tripId)).then(({ data }) => setTrip(data.trip)).catch(() => {})
     })
     return () => {
       echo.leave(`trip.${id}`)
     }
-  }, [id])
+  }, [id, tripId])
 
   const updateStatus = async (action: 'accept' | 'start' | 'complete' | 'cancel') => {
     if (!trip) return

@@ -8,12 +8,13 @@ Proyecto de microservicios tipo Uber/Domi: Auth, Trips (y futuros Users, Drivers
 
 ```
 domi-ubi/
-├── docker-compose.yml      # Orquestación: gateway, auth, trips, users, MySQL, Redis, RabbitMQ
+├── docker-compose.yml      # Orquestación: gateway, auth, trips, users, drivers, realtime, MySQL, Redis, RabbitMQ
 ├── docker/
 │   └── php/
-│       └── Dockerfile      # Imagen PHP 8.4-FPM para Laravel
+│       └── Dockerfile      # Imagen PHP 8.4 para Laravel
+├── frontend/               # React (Vite) — login, viajes, conductor, tiempo real (Echo)
 ├── gateway/
-│   └── nginx.conf          # API Gateway (/auth, /trips, /users)
+│   └── nginx.conf          # API Gateway (/auth, /trips, /users, /drivers, /realtime, /app WS)
 └── services/
     ├── auth-service/       # Registro, login, JWT, validación de token
     ├── users-service/      # Perfil, roles (cliente/conductor), valida JWT con Auth
@@ -226,8 +227,9 @@ Bajo el prefijo **`/trips`**. Todas las rutas requieren **Authorization: Bearer 
 |--------|------|-------------|
 | POST | `/api/trips` | Crear viaje (pasajero). Body: `origin_latitude`, `origin_longitude`, `destination_latitude`, `destination_longitude`, opcional `origin_address`, `destination_address`. Estado inicial: requested → searching_driver. |
 | GET | `/api/trips` | Listar mis viajes (como pasajero o conductor). |
+| GET | `/api/trips/available` | Viajes buscando conductor (para que conductores vean y acepten). |
 | GET | `/api/trips/available-drivers` | Conductores disponibles (consulta al Drivers Service). |
-| GET | `/api/trips/{id}` | Ver un viaje (solo si eres pasajero o conductor). |
+| GET | `/api/trips/{id}` | Ver un viaje (pasajero, conductor asignado, o cualquiera si está en searching_driver). |
 | PUT | `/api/trips/{id}/status` | Cambiar estado. Body: `{"action": "accept"|"start"|"complete"|"cancel"}`. **accept** = conductor acepta; **start** = conductor inicia; **complete** = conductor finaliza; **cancel** = pasajero o conductor cancela. |
 
 **Estados del viaje:** `requested` → `searching_driver` → `driver_assigned` → `in_progress` → `completed` o `cancelled`. Cada cambio de estado se emite por WebSocket (evento `TripStatusChanged` en el canal `trip.{id}`).
@@ -246,9 +248,23 @@ Bajo el prefijo **`/trips`**. Todas las rutas requieren **Authorization: Bearer 
 
 Trips Service y Drivers Service tienen `BROADCAST_CONNECTION=reverb` y las variables `REVERB_*` apuntando a `realtime-service:8080` para enviar eventos al servidor Reverb. El frontend puede usar **Laravel Echo** con el driver **reverb** para suscribirse a estos canales.
 
+## Frontend (React + Vite)
+
+El frontend está en **`frontend/`**: React 19, TypeScript, React Router, Axios, Laravel Echo (Reverb).
+
+**Pantallas:** Login, Registro, Perfil (rol pasajero/conductor), Home (enlace a pedir viaje o panel conductor), Solicitar viaje (origen/destino por coordenadas), Detalle de viaje (estados en vivo, acciones aceptar/iniciar/completar/cancelar), Panel conductor (disponibilidad, ubicación, lista de viajes disponibles).
+
+**Ejecutar en desarrollo:**
+
+1. Backend y gateway deben estar levantados (p. ej. `docker-compose up -d`).
+2. En otra terminal: `cd frontend && npm install && npm run dev`.
+3. Abre `http://localhost:5173`. Vite hace proxy de `/auth`, `/users`, `/trips`, `/drivers`, `/realtime` y `/app` (WebSocket) al gateway en `localhost:80`.
+
+**Build para producción:** `cd frontend && npm run build`. Los artefactos quedan en `frontend/dist`; sirve esa carpeta con Nginx u otro servidor apuntando la API al gateway.
+
 ## Orden de implementación recomendado
 
-Ver **[docs/PLAN-DE-TRABAJO.md](docs/PLAN-DE-TRABAJO.md)** (Fases 5–13). Resumen: 1) Auth ✅ 2) Users ✅ 3) Drivers ✅ 4) Trips ✅ 5) Realtime ✅ 6) Frontend (pendiente).
+Ver **[docs/PLAN-DE-TRABAJO.md](docs/PLAN-DE-TRABAJO.md)** (Fases 5–13). Resumen: 1) Auth ✅ 2) Users ✅ 3) Drivers ✅ 4) Trips ✅ 5) Realtime ✅ 6) Frontend ✅.
 
 ## Desarrollo local sin Docker
 
