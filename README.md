@@ -169,6 +169,8 @@ Todos bajo el prefijo **`/auth`** cuando se usa el gateway (p. ej. `http://local
 |--------|-------------------|--------------------|--------|
 | POST   | `/api/register`   | Registrar usuario  | No     |
 | POST   | `/api/login`     | Login → JWT        | No     |
+| POST   | `/api/forgot-password` | Solicitar restablecer contraseña (envía email con enlace) | No |
+| POST   | `/api/reset-password` | Restablecer contraseña (body: email, token, password, password_confirmation) | No |
 | POST   | `/api/validate-token` | Validar JWT y devolver usuario | Sí (Bearer) |
 | POST   | `/api/logout`    | Invalidar token    | Sí (Bearer) |
 

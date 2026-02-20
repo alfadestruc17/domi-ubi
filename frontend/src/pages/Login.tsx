@@ -1,15 +1,26 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useAuth } from '../contexts/AuthContext'
 import './Auth.css'
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const state = location.state as { message?: string } | null
+    if (state?.message) {
+      setSuccessMessage(state.message)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, location.pathname, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,6 +28,7 @@ export default function Login() {
     setLoading(true)
     try {
       await login(email, password)
+      toast.success('Bienvenido')
       navigate('/', { replace: true })
     } catch (err: unknown) {
       const ax = err as { response?: { status?: number; data?: { error?: string; message?: string } }; message?: string }
@@ -40,6 +52,7 @@ export default function Login() {
         <h1>Domi-Ubi</h1>
         <p className="auth-subtitle">Iniciar sesión</p>
         <form onSubmit={handleSubmit}>
+          {successMessage && <div className="auth-success">{successMessage}</div>}
           {error && <div className="auth-error">{error}</div>}
           <label>
             Correo

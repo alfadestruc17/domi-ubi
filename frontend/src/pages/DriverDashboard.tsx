@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { api } from '../services/api'
 import { ROUTES } from '../config/api'
 import { getEcho } from '../config/echo'
@@ -59,6 +60,7 @@ export default function DriverDashboard() {
         longitude: lng,
       })
       setAvailable(!available)
+      toast.success(!available ? 'En línea' : 'Desconectado')
       loadTrips()
     } catch (err: unknown) {
       const ax = err as { response?: { data?: { error?: string } } }
@@ -73,6 +75,7 @@ export default function DriverDashboard() {
     setError('')
     try {
       await api.put(ROUTES.drivers.location, { latitude: lat, longitude: lng })
+      toast.success('Ubicación actualizada')
     } catch (err: unknown) {
       const ax = err as { response?: { data?: { error?: string } } }
       setError(ax.response?.data?.error ?? 'Error')

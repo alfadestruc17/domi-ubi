@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
 import { useAuth } from '../contexts/AuthContext'
 import { api } from '../services/api'
 import { ROUTES } from '../config/api'
@@ -33,6 +34,7 @@ export default function Profile() {
     try {
       await api.put<{ profile: ProfileType }>(ROUTES.users.profile, { name, email, phone, role })
       await refreshProfile()
+      toast.success('Perfil guardado')
       setSaved(true)
     } finally {
       setLoading(false)

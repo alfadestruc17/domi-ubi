@@ -8,6 +8,7 @@ export const ROUTES = {
     register: '/auth/api/register',
     login: '/auth/api/login',
     forgotPassword: '/auth/api/forgot-password',
+    resetPassword: '/auth/api/reset-password',
     validateToken: '/auth/api/validate-token',
     logout: '/auth/api/logout',
   },

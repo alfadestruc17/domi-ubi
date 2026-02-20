@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { api } from '../services/api'
 import { ROUTES } from '../config/api'
 import './Auth.css'
@@ -16,6 +17,7 @@ export default function ForgotPassword() {
     setLoading(true)
     try {
       await api.post(ROUTES.auth.forgotPassword, { email })
+      toast.success('Si el correo existe, recibirás el enlace en unos minutos')
       setSent(true)
     } catch (err: unknown) {
       const ax = err as { response?: { status?: number; data?: { message?: string } } }

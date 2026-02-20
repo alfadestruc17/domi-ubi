@@ -1,5 +1,32 @@
 .request-trip {
-  max-width: 480px;
+  max-width: 640px;
+}
+
+.request-trip-mode {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.request-trip-mode button {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.request-trip-mode button.active {
+  background: #e94560;
+  border-color: #e94560;
+}
+
+.request-trip-coords {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0.25rem 0;
 }
 
 .request-trip h1 {

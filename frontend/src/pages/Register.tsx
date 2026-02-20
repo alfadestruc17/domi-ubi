@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useAuth } from '../contexts/AuthContext'
 import './Auth.css'
 
@@ -23,6 +24,7 @@ export default function Register() {
     setLoading(true)
     try {
       await register(name, email, password, password_confirmation)
+      toast.success('Cuenta creada correctamente')
       navigate('/', { replace: true })
     } catch (err: unknown) {
       const ax = err as { response?: { status?: number; data?: { error?: string; message?: unknown } } }

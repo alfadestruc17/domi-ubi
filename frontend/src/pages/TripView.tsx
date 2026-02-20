@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { getEcho } from '../config/echo'
 import { api } from '../services/api'
 import { ROUTES } from '../config/api'
@@ -56,6 +57,7 @@ export default function TripView() {
     try {
       const { data } = await api.put<{ trip: Trip }>(ROUTES.trips.status(trip.id), { action })
       setTrip(data.trip)
+      toast.success(data.trip.status === 'completed' ? 'Viaje completado' : data.trip.status === 'cancelled' ? 'Viaje cancelado' : 'Estado actualizado')
     } catch (err: unknown) {
       const ax = err as { response?: { data?: { error?: string } } }
       setError(ax.response?.data?.error ?? 'Error al actualizar')
