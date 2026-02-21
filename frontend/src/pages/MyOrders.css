@@ -1,0 +1,12 @@
+.my-orders-page { padding: 0.5rem 0; }
+.my-orders-page h1 { font-size: 1.5rem; margin: 0 0 1rem; color: #fff; }
+.my-orders-loading, .my-orders-empty { color: rgba(255,255,255,0.6); }
+.my-orders-empty a { color: #e94560; }
+.orders-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.orders-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+.orders-card-link { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; padding: 1rem; text-decoration: none; color: inherit; }
+.orders-card-link:hover { background: rgba(255,255,255,0.06); }
+.orders-id { font-weight: 600; color: #fff; }
+.orders-status { font-size: 0.9rem; color: rgba(255,255,255,0.8); }
+.orders-total { font-weight: 700; color: #e94560; margin-left: auto; }
+.orders-date { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
