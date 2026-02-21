@@ -29,4 +29,9 @@ export const ROUTES = {
     availability: '/drivers/api/drivers/me/availability',
     location: '/drivers/api/drivers/me/location',
   },
+  catalog: {
+    stores: '/catalog/api/stores',
+    store: (id: number) => `/catalog/api/stores/${id}`,
+    products: '/catalog/api/products',
+  },
 } as const

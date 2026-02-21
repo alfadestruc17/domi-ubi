@@ -30,11 +30,13 @@
   gap: 1rem;
 }
 
+.layout-nav-link,
 .layout-profile {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
 }
+.layout-nav-link:hover,
 .layout-profile:hover { color: #e94560; }
 .layout-user {
   font-size: 0.9rem;

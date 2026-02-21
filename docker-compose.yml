@@ -12,6 +12,7 @@ services:
       - users-service
       - drivers-service
       - realtime-service
+      - catalog-service
     networks:
       - domi-net
 
@@ -71,6 +72,19 @@ services:
       - redis
       - auth-service
       - realtime-service
+    networks:
+      - domi-net
+
+  catalog-service:
+    build: ./docker/php
+    container_name: catalog-service
+    volumes:
+      - ./services/catalog-service:/var/www
+    working_dir: /var/www
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    depends_on:
+      - catalog-db
+      - redis
     networks:
       - domi-net
 
@@ -141,6 +155,19 @@ services:
     networks:
       - domi-net
 
+  catalog-db:
+    image: mysql:8
+    container_name: catalog-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: catalog_db
+    ports:
+      - "3311:3306"
+    volumes:
+      - catalog-db-data:/var/lib/mysql
+    networks:
+      - domi-net
+
   redis:
     image: redis:alpine
     container_name: redis
@@ -170,3 +197,4 @@ volumes:
   trips-db-data:
   users-db-data:
   drivers-db-data:
+  catalog-db-data:

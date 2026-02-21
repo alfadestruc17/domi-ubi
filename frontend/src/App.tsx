@@ -13,6 +13,8 @@ import Profile from './pages/Profile'
 import RequestTrip from './pages/RequestTrip'
 import TripView from './pages/TripView'
 import DriverDashboard from './pages/DriverDashboard'
+import Stores from './pages/Stores'
+import StoreDetail from './pages/StoreDetail'
 import './App.css'
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
             }
           >
             <Route index element={<Home />} />
+            <Route path="stores" element={<Stores />} />
+            <Route path="stores/:id" element={<StoreDetail />} />
             <Route path="profile" element={<Profile />} />
             <Route path="request-trip" element={<RequestTrip />} />
             <Route path="trip/:id" element={<TripView />} />

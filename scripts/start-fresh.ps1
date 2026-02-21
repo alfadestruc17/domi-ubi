@@ -43,8 +43,12 @@ docker exec drivers-service sh -c "composer install --no-interaction && php arti
 Write-Host "`n7. Setup Trips Service..." -ForegroundColor Yellow
 docker exec trips-service sh -c "composer install --no-interaction && php artisan key:generate && php artisan migrate --force"
 
-# 7. Setup Realtime
-Write-Host "`n8. Setup Realtime Service..." -ForegroundColor Yellow
+# 7. Setup Catalog
+Write-Host "`n8. Setup Catalog Service..." -ForegroundColor Yellow
+docker exec catalog-service sh -c "composer install --no-interaction && php artisan key:generate && php artisan migrate --force && php artisan db:seed --force"
+
+# 8. Setup Realtime
+Write-Host "`n9. Setup Realtime Service..." -ForegroundColor Yellow
 docker exec realtime-service sh -c "composer install --no-interaction && php artisan key:generate"
 
 Write-Host "`n=== Listo ===" -ForegroundColor Green

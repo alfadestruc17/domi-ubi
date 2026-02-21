@@ -16,6 +16,7 @@ export default function Layout() {
       <header className="layout-header">
         <Link to="/" className="layout-logo">Domi-Ubi</Link>
         <nav className="layout-nav">
+          <Link to="/stores" className="layout-nav-link">Tiendas</Link>
           <Link to="/profile" className="layout-profile">Perfil</Link>
           <span className="layout-user">
             {user?.name} {profile?.role === 'driver' && '(Conductor)'}
