@@ -1,67 +1,65 @@
-.layout {
-  min-height: 100vh;
-  background: #0f0f1a;
-  color: #e4e4e7;
-}
-
+.layout { min-height: 100vh; background: var(--bg-primary); }
 .layout-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.5rem;
-  background: rgba(26, 26, 46, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.875rem 1.5rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
 }
-
 .layout-logo {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #e94560;
+  color: var(--text-primary);
   text-decoration: none;
+  letter-spacing: -0.02em;
 }
-
-.layout-logo:hover {
-  color: #ff6b6b;
-}
-
-.layout-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
+.layout-logo:hover { color: var(--accent); }
+.layout-nav { display: flex; align-items: center; gap: 0.25rem; }
 .layout-nav-link,
 .layout-profile {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
   text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: color 0.2s, background 0.2s;
 }
 .layout-nav-link:hover,
-.layout-profile:hover { color: #e94560; }
-.layout-user {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+.layout-profile:hover { color: var(--text-primary); background: var(--bg-elevated); }
+.layout-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
-
 .layout-logout {
-  padding: 0.4rem 0.75rem;
+  margin-left: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
   background: transparent;
-  border: 1px solid rgba(233, 69, 96, 0.5);
-  border-radius: 6px;
-  color: #e94560;
-  font-size: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
-
-.layout-logout:hover {
-  background: rgba(233, 69, 96, 0.15);
-}
-
-.layout-main {
-  padding: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+.layout-logout:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.layout-main { padding: 1.5rem; max-width: 720px; margin: 0 auto; }
+@media (min-width: 768px) { .layout-main { padding: 2rem; } }
 
 .loading-screen {
   min-height: 60vh;

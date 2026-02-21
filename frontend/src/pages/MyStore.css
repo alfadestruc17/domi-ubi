@@ -1,0 +1,31 @@
+.my-store { padding: 0.5rem 0; max-width: 640px; }
+.my-store-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 1.25rem; color: var(--text-primary); }
+.my-store-loading, .my-store-muted { color: var(--text-muted); }
+.my-store-error { color: var(--accent); margin-bottom: 1rem; }
+.my-store-section { padding: 1.25rem; margin-bottom: 1.25rem; }
+.my-store-section-title { font-size: 1rem; font-weight: 600; margin: 0 0 1rem; color: var(--text-primary); }
+.my-store-form label { display: block; margin-bottom: 0.75rem; font-size: 0.875rem; color: var(--text-secondary); }
+.my-store-form input[type="text"],
+.my-store-form input[type="number"] {
+  display: block; width: 100%; max-width: 320px; margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem; background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius-md); color: var(--text-primary);
+}
+.my-store-checkbox { display: flex; align-items: center; gap: 0.5rem; }
+.my-store-form button { margin-top: 0.5rem; margin-right: 0.5rem; }
+.my-store-product-list { list-style: none; padding: 0; margin: 0; }
+.my-store-product-item {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;
+  padding: 0.75rem 0; border-bottom: 1px solid var(--border);
+}
+.my-store-product-item:last-child { border-bottom: none; }
+.my-store-product-info { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.my-store-product-name { font-weight: 600; color: var(--text-primary); }
+.my-store-product-desc { font-size: 0.875rem; color: var(--text-muted); }
+.my-store-product-price { font-weight: 600; color: var(--accent); }
+.my-store-product-actions { display: flex; gap: 0.5rem; }
+.my-store-form-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.my-store-form-inline input { width: 120px; padding: 0.4rem 0.5rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); }
+.my-store-btn-danger { padding: 0.5rem 0.75rem; font-size: 0.8125rem; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: var(--radius-md); cursor: pointer; }
+.my-store-btn-danger:hover { background: var(--accent-soft); }
+.my-store-btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }

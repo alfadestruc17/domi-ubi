@@ -101,6 +101,7 @@ services:
       - redis
       - auth-service
       - catalog-service
+      - drivers-service
       - realtime-service
     networks:
       - domi-net

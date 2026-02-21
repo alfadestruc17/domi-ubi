@@ -36,7 +36,17 @@ export const ROUTES = {
   },
   orders: {
     list: '/orders/api/orders',
+    listAsDriver: '/orders/api/orders?driver=me',
     create: '/orders/api/orders',
     show: (id: number) => `/orders/api/orders/${id}`,
+    assign: (id: number) => `/orders/api/orders/${id}/assign`,
+    updateStatus: (id: number) => `/orders/api/orders/${id}/status`,
+  },
+  catalogManagement: {
+    myStore: '/catalog/api/my-store',
+    updateStore: (id: number) => `/catalog/api/stores/${id}`,
+    addProduct: (storeId: number) => `/catalog/api/stores/${storeId}/products`,
+    updateProduct: (storeId: number, productId: number) => `/catalog/api/stores/${storeId}/products/${productId}`,
+    deleteProduct: (storeId: number, productId: number) => `/catalog/api/stores/${storeId}/products/${productId}`,
   },
 } as const

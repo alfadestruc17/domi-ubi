@@ -5,6 +5,7 @@ import { api } from '../services/api'
 import { ROUTES } from '../config/api'
 import { getEcho } from '../config/echo'
 import type { Trip } from '../types'
+import type { Order } from '../types'
 import type { DriverPresence } from '../types'
 import './DriverDashboard.css'
 
@@ -15,6 +16,7 @@ export default function DriverDashboard() {
   const [lat, setLat] = useState(BOGOTA.lat)
   const [lng, setLng] = useState(BOGOTA.lng)
   const [trips, setTrips] = useState<Trip[]>([])
+  const [driverOrders, setDriverOrders] = useState<Order[]>([])
   const [drivers, setDrivers] = useState<DriverPresence[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -23,6 +25,12 @@ export default function DriverDashboard() {
     api.get<{ trips: Trip[] }>(ROUTES.trips.available).then(({ data }) => {
       setTrips(data.trips ?? [])
     }).catch(() => setTrips([]))
+  }
+
+  const loadDriverOrders = () => {
+    api.get<{ orders: Order[] }>(ROUTES.orders.listAsDriver).then(({ data }) => {
+      setDriverOrders(data.orders ?? [])
+    }).catch(() => setDriverOrders([]))
   }
 
   const loadDrivers = () => {
@@ -39,6 +47,7 @@ export default function DriverDashboard() {
       if (d?.longitude != null) setLng(Number(d.longitude))
     }).catch(() => {})
     loadTrips()
+    loadDriverOrders()
     loadDrivers()
   }, [])
 
@@ -62,6 +71,7 @@ export default function DriverDashboard() {
       setAvailable(!available)
       toast.success(!available ? 'En línea' : 'Desconectado')
       loadTrips()
+      loadDriverOrders()
     } catch (err: unknown) {
       const ax = err as { response?: { data?: { error?: string } } }
       setError(ax.response?.data?.error ?? 'Error')
@@ -100,6 +110,20 @@ export default function DriverDashboard() {
         <label>Lat <input type="number" step="any" value={lat} onChange={(e) => setLat(Number(e.target.value))} /></label>
         <label>Lng <input type="number" step="any" value={lng} onChange={(e) => setLng(Number(e.target.value))} /></label>
         <button type="button" onClick={updateLocation} disabled={loading}>Actualizar ubicación</button>
+      </section>
+      <section className="driver-dash-section">
+        <h2>Pedidos asignados</h2>
+        {driverOrders.length === 0 ? <p className="driver-dash-empty">Ningún pedido asignado.</p> : (
+          <ul className="driver-dash-trips">
+            {driverOrders.map((o) => (
+              <li key={o.id}>
+                <Link to={`/orders/${o.id}`} className="driver-dash-order-link">
+                  Pedido #{o.id} — {o.status} — ${(o.total / 1000).toFixed(0)}k
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
       <section className="driver-dash-section">
         <h2>Viajes buscando conductor</h2>

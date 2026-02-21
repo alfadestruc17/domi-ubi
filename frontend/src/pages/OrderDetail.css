@@ -9,4 +9,6 @@
 .order-detail-items h2 { font-size: 1rem; margin: 0 0 0.75rem; color: rgba(255,255,255,0.9); }
 .order-items-list { list-style: none; padding: 0; margin: 0; }
 .order-item-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
-.order-item-price { font-weight: 600; color: #e94560; }
+.order-item-price { font-weight: 600; color: var(--accent); }
+.order-detail-driver-actions { margin-top: 1rem; }
+.order-detail-back { color: var(--accent); }

@@ -63,5 +63,14 @@ class StoreSeeder extends Seeder
                 ]);
             }
         }
+
+        // Asignar primera tienda al usuario auth 1 (para pruebas: el primer usuario que se registre puede ser tienda)
+        $firstStore = Store::query()->first();
+        if ($firstStore && ! \App\Models\StoreUser::query()->where('auth_user_id', 1)->exists()) {
+            \App\Models\StoreUser::query()->create([
+                'auth_user_id' => 1,
+                'store_id' => $firstStore->id,
+            ]);
+        }
     }
 }

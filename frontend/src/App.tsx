@@ -19,6 +19,8 @@ import StoreDetail from './pages/StoreDetail'
 import Cart from './pages/Cart'
 import MyOrders from './pages/MyOrders'
 import OrderDetail from './pages/OrderDetail'
+import MyTrips from './pages/MyTrips'
+import MyStore from './pages/MyStore'
 import './App.css'
 
 function App() {
@@ -46,7 +48,9 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="orders" element={<MyOrders />} />
             <Route path="orders/:id" element={<OrderDetail />} />
+            <Route path="trips" element={<MyTrips />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="my-store" element={<MyStore />} />
             <Route path="request-trip" element={<RequestTrip />} />
             <Route path="trip/:id" element={<TripView />} />
             <Route path="driver" element={<DriverDashboard />} />

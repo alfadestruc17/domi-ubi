@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\AuthServiceClient;
 use App\Services\CatalogServiceClient;
+use App\Services\DriversServiceClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(CatalogServiceClient::class, function (): CatalogServiceClient {
             return new CatalogServiceClient(config('services.catalog_service_url'));
+        });
+
+        $this->app->singleton(DriversServiceClient::class, function (): DriversServiceClient {
+            return new DriversServiceClient(config('services.drivers_service_url'));
         });
     }
 

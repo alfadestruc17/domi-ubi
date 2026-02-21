@@ -50,5 +50,8 @@ export interface Order {
   delivery_longitude: number
   delivery_address: string | null
   requested_at: string | null
+  driver_auth_user_id?: number | null
+  assigned_at?: string | null
+  delivered_at?: string | null
   items: OrderItem[]
 }

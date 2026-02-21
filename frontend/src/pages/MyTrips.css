@@ -1,0 +1,17 @@
+.my-trips { padding: 0.5rem 0; }
+.my-trips-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 1rem; color: var(--text-primary); }
+.my-trips-muted { color: var(--text-muted); font-size: 0.9375rem; }
+.my-trips-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.my-trips-card {
+  display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem;
+  text-decoration: none; color: inherit; border-radius: var(--radius-lg);
+  transition: border-color 0.2s, background 0.2s;
+}
+.my-trips-card:hover { background: var(--bg-elevated); border-color: var(--border-hover); }
+.my-trips-id { font-weight: 600; color: var(--text-primary); }
+.my-trips-status {
+  font-size: 0.8125rem; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm);
+  background: var(--bg-elevated); color: var(--text-secondary);
+}
+.my-trips-status[data-status="completed"] { background: var(--success-soft); color: var(--success); }
+.my-trips-date { margin-left: auto; font-size: 0.875rem; color: var(--text-muted); }

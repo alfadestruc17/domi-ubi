@@ -70,4 +70,33 @@ class Order extends Model
     {
         return (int) $this->auth_user_id === $authUserId;
     }
+
+    public function isDriver(int $authUserId): bool
+    {
+        return $this->driver_auth_user_id !== null && (int) $this->driver_auth_user_id === $authUserId;
+    }
+
+    /** Transiciones permitidas para el repartidor. */
+    public function driverCanTransitionTo(string $status): bool
+    {
+        $allowed = [
+            self::STATUS_ASSIGNED => [self::STATUS_PICKED_UP],
+            self::STATUS_PICKED_UP => [self::STATUS_ON_THE_WAY],
+            self::STATUS_ON_THE_WAY => [self::STATUS_DELIVERED],
+        ];
+
+        return isset($allowed[$this->status]) && in_array($status, $allowed[$this->status], true);
+    }
+
+    /** Transiciones permitidas para la tienda (pending → preparing → ready_for_pickup). */
+    public function storeCanTransitionTo(string $status): bool
+    {
+        $allowed = [
+            self::STATUS_PENDING => [self::STATUS_CONFIRMED, self::STATUS_PREPARING],
+            self::STATUS_CONFIRMED => [self::STATUS_PREPARING],
+            self::STATUS_PREPARING => [self::STATUS_READY_FOR_PICKUP],
+        ];
+
+        return isset($allowed[$this->status]) && in_array($status, $allowed[$this->status], true);
+    }
 }
