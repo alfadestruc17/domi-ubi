@@ -2,6 +2,8 @@
 
 Lista de lo implementado y qué se puede seguir mejorando.
 
+**Escalar a app de domicilios:** ver **[docs/PLAN-ESCALADO-DOMICILIOS.md](PLAN-ESCALADO-DOMICILIOS.md)** — fases D1–D6 (catálogo, pedidos, repartidor, pagos).
+
 ---
 
 ## ✅ Ya implementado
