@@ -9,7 +9,7 @@ export interface Profile {
   name: string
   email: string
   phone?: string
-  role: 'customer' | 'driver'
+  role: 'customer' | 'driver' | 'store'
 }
 
 export interface Trip {

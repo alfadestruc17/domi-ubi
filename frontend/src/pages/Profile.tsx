@@ -11,7 +11,7 @@ export default function Profile() {
   const [name, setName] = useState(profile?.name ?? user?.name ?? '')
   const [email, setEmail] = useState(profile?.email ?? user?.email ?? '')
   const [phone, setPhone] = useState(profile?.phone ?? '')
-  const [role, setRole] = useState<'customer' | 'driver'>(profile?.role ?? 'customer')
+  const [role, setRole] = useState<'customer' | 'driver' | 'store'>(profile?.role ?? 'customer')
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -44,18 +44,22 @@ export default function Profile() {
   return (
     <div className="profile-page">
       <h1>Mi perfil</h1>
-      <p className="profile-hint">Define tu rol: pasajero o conductor. Los conductores pueden aceptar viajes.</p>
+      <p className="profile-hint">Define tu rol: pasajero, conductor o tienda. Los conductores aceptan viajes; las tiendas gestionan su catálogo (próximamente).</p>
       <form onSubmit={handleSubmit} className="profile-form">
         <label>Nombre <input type="text" value={name} onChange={(e) => setName(e.target.value)} required /></label>
         <label>Correo <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
         <label>Teléfono <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Opcional" /></label>
         <label>
           Rol
-          <select value={role} onChange={(e) => setRole(e.target.value as 'customer' | 'driver')}>
+          <select value={role} onChange={(e) => setRole(e.target.value as 'customer' | 'driver' | 'store')}>
             <option value="customer">Pasajero</option>
             <option value="driver">Conductor</option>
+            <option value="store">Tienda</option>
           </select>
         </label>
+        {role === 'store' && (
+          <p className="profile-store-hint">En una próxima versión podrás gestionar tu tienda y productos desde aquí.</p>
+        )}
         {saved && <p className="profile-saved">Perfil guardado.</p>}
         <button type="submit" disabled={loading}>{loading ? 'Guardando…' : 'Guardar'}</button>
       </form>

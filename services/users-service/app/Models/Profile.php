@@ -12,6 +12,8 @@ class Profile extends Model
 
     public const ROLE_DRIVER = 'driver';
 
+    public const ROLE_STORE = 'store';
+
     protected $fillable = [
         'auth_user_id',
         'name',
@@ -33,5 +35,10 @@ class Profile extends Model
     public function isCustomer(): bool
     {
         return $this->role === self::ROLE_CUSTOMER;
+    }
+
+    public function isStore(): bool
+    {
+        return $this->role === self::ROLE_STORE;
     }
 }

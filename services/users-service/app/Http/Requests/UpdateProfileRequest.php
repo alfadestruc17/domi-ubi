@@ -24,7 +24,7 @@ class UpdateProfileRequest extends FormRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'string', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'role' => ['sometimes', 'string', Rule::in([Profile::ROLE_CUSTOMER, Profile::ROLE_DRIVER])],
+            'role' => ['sometimes', 'string', Rule::in([Profile::ROLE_CUSTOMER, Profile::ROLE_DRIVER, Profile::ROLE_STORE])],
         ];
     }
 }

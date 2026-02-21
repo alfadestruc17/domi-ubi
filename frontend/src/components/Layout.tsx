@@ -19,7 +19,7 @@ export default function Layout() {
           <Link to="/stores" className="layout-nav-link">Tiendas</Link>
           <Link to="/profile" className="layout-profile">Perfil</Link>
           <span className="layout-user">
-            {user?.name} {profile?.role === 'driver' && '(Conductor)'}
+            {user?.name} {profile?.role === 'driver' && '(Conductor)'} {profile?.role === 'store' && '(Tienda)'}
           </span>
           <button type="button" onClick={handleLogout} className="layout-logout">Salir</button>
         </nav>

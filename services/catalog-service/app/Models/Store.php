@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Store extends Model
 {
@@ -29,6 +30,11 @@ class Store extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function storeUser(): HasOne
+    {
+        return $this->hasOne(StoreUser::class);
     }
 
     public function scopeActive($query)
