@@ -12,6 +12,7 @@ export default defineConfig({
       '/trips': { target: 'http://localhost:80', changeOrigin: true },
       '/drivers': { target: 'http://localhost:80', changeOrigin: true },
       '/catalog': { target: 'http://localhost:80', changeOrigin: true },
+      '/orders': { target: 'http://localhost:80', changeOrigin: true },
       '/realtime': { target: 'http://localhost:80', changeOrigin: true },
       '/app': { target: 'http://localhost:80', ws: true },
     },

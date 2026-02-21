@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { api } from '../services/api'
 import { ROUTES } from '../config/api'
+import { useCart } from '../contexts/CartContext'
 import './StoreDetail.css'
 
 interface StoreInfo {
@@ -21,10 +23,12 @@ interface ProductItem {
 
 export default function StoreDetail() {
   const { id } = useParams<{ id: string }>()
+  const { addItem } = useCart()
   const [store, setStore] = useState<StoreInfo | null>(null)
   const [products, setProducts] = useState<ProductItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [quantities, setQuantities] = useState<Record<number, number>>({})
 
   useEffect(() => {
     if (!id) return
@@ -59,9 +63,32 @@ export default function StoreDetail() {
                   <span className="product-name">{p.name}</span>
                   {p.description && <span className="product-desc">{p.description}</span>}
                 </div>
-                <span className="product-price">
-                  ${(p.price / 1000).toFixed(0)}k
-                </span>
+                <div className="product-actions">
+                  <span className="product-price">${(p.price / 1000).toFixed(0)}k</span>
+                  <div className="product-add">
+                    <input
+                      type="number"
+                      min={1}
+                      value={quantities[p.id] ?? 1}
+                      onChange={(e) => setQuantities((q) => ({ ...q, [p.id]: Math.max(1, parseInt(e.target.value, 10) || 1) }))}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const qty = quantities[p.id] ?? 1
+                        addItem(store.id, store.name, {
+                          product_id: p.id,
+                          product_name: p.name,
+                          unit_price: p.price,
+                          quantity: qty,
+                        })
+                        toast.success(`${p.name} añadido al carrito`)
+                      }}
+                    >
+                      Añadir
+                    </button>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>

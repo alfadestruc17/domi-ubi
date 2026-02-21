@@ -34,4 +34,9 @@ export const ROUTES = {
     store: (id: number) => `/catalog/api/stores/${id}`,
     products: '/catalog/api/products',
   },
+  orders: {
+    list: '/orders/api/orders',
+    create: '/orders/api/orders',
+    show: (id: number) => `/orders/api/orders/${id}`,
+  },
 } as const

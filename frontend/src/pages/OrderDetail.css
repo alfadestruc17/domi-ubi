@@ -1,0 +1,12 @@
+.order-detail-page { padding: 0.5rem 0; }
+.order-detail-back { display: inline-block; margin-bottom: 1rem; font-size: 0.9rem; color: #e94560; text-decoration: none; }
+.order-detail-back:hover { text-decoration: underline; }
+.order-detail-page h1 { font-size: 1.5rem; margin: 0 0 0.5rem; color: #fff; }
+.order-detail-status, .order-detail-total, .order-detail-date, .order-detail-address, .order-detail-coords { margin: 0.25rem 0; color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+.order-detail-loading, .order-detail-error { color: rgba(255,255,255,0.6); }
+.order-detail-error { color: #f87171; }
+.order-detail-items { margin-top: 1.5rem; }
+.order-detail-items h2 { font-size: 1rem; margin: 0 0 0.75rem; color: rgba(255,255,255,0.9); }
+.order-items-list { list-style: none; padding: 0; margin: 0; }
+.order-item-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
+.order-item-price { font-weight: 600; color: #e94560; }

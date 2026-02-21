@@ -28,4 +28,9 @@
 .product-info { display: flex; flex-direction: column; gap: 0.25rem; }
 .product-name { font-weight: 600; color: #fff; }
 .product-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+.product-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 .product-price { font-weight: 700; color: #e94560; white-space: nowrap; }
+.product-add { display: flex; align-items: center; gap: 0.5rem; }
+.product-add input { width: 56px; padding: 0.35rem 0.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; }
+.product-add button { padding: 0.4rem 0.75rem; background: #e94560; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+.product-add button:hover { background: #d63a54; }

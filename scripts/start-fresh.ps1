@@ -47,8 +47,12 @@ docker exec trips-service sh -c "composer install --no-interaction && php artisa
 Write-Host "`n8. Setup Catalog Service..." -ForegroundColor Yellow
 docker exec catalog-service sh -c "composer install --no-interaction && php artisan key:generate && php artisan migrate --force && php artisan db:seed --force"
 
-# 8. Setup Realtime
-Write-Host "`n9. Setup Realtime Service..." -ForegroundColor Yellow
+# 8. Setup Orders
+Write-Host "`n9. Setup Orders Service..." -ForegroundColor Yellow
+docker exec orders-service sh -c "composer install --no-interaction && php artisan key:generate && php artisan migrate --force"
+
+# 9. Setup Realtime
+Write-Host "`n10. Setup Realtime Service..." -ForegroundColor Yellow
 docker exec realtime-service sh -c "composer install --no-interaction && php artisan key:generate"
 
 Write-Host "`n=== Listo ===" -ForegroundColor Green

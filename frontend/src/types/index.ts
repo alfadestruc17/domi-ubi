@@ -33,3 +33,22 @@ export interface DriverPresence {
   longitude: number
   updated_at: string
 }
+
+export interface OrderItem {
+  product_id: number
+  product_name: string
+  quantity: number
+  unit_price: number
+}
+
+export interface Order {
+  id: number
+  store_id: number
+  status: string
+  total: number
+  delivery_latitude: number
+  delivery_longitude: number
+  delivery_address: string | null
+  requested_at: string | null
+  items: OrderItem[]
+}
