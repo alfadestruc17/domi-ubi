@@ -16,6 +16,13 @@ const destIcon = L.divIcon({
   iconAnchor: [16, 32],
 })
 
+const myLocationIcon = L.divIcon({
+  className: 'map-picker-marker map-picker-mylocation',
+  html: '<span>●</span>',
+  iconSize: [20, 20],
+  iconAnchor: [10, 10],
+})
+
 interface MapPickerProps {
   origin: { lat: number; lng: number } | null
   destination: { lat: number; lng: number } | null
@@ -24,6 +31,8 @@ interface MapPickerProps {
   mode: 'origin' | 'destination'
   center: [number, number]
   zoom?: number
+  /** Si se pasa, se muestra un punto "estás aquí" en el mapa */
+  userLocation?: { lat: number; lng: number } | null
 }
 
 /**
@@ -38,11 +47,13 @@ export default function MapPicker({
   mode,
   center,
   zoom = 13,
+  userLocation = null,
 }: MapPickerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const originMarkerRef = useRef<L.Marker | null>(null)
   const destMarkerRef = useRef<L.Marker | null>(null)
+  const userLocationMarkerRef = useRef<L.Marker | null>(null)
   const callbacksRef = useRef({ mode, onOriginClick, onDestClick })
   callbacksRef.current = { mode, onOriginClick, onDestClick }
 
@@ -72,10 +83,11 @@ export default function MapPicker({
       mapRef.current = null
       originMarkerRef.current = null
       destMarkerRef.current = null
+      userLocationMarkerRef.current = null
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps -- solo crear/destruir una vez
 
-  // Actualizar vista, marcadores y centro cuando cambian las props.
+  // Actualizar vista, marcadores (origen, destino, mi ubicación) cuando cambian las props.
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
@@ -101,7 +113,17 @@ export default function MapPicker({
       m.bindPopup('Destino')
       destMarkerRef.current = m
     }
-  }, [center, zoom, origin, destination])
+
+    if (userLocationMarkerRef.current) {
+      map.removeLayer(userLocationMarkerRef.current)
+      userLocationMarkerRef.current = null
+    }
+    if (userLocation) {
+      const m = L.marker([userLocation.lat, userLocation.lng], { icon: myLocationIcon }).addTo(map)
+      m.bindPopup('Tu ubicación')
+      userLocationMarkerRef.current = m
+    }
+  }, [center, zoom, origin, destination, userLocation])
 
   return (
     <div className="map-picker-wrap">

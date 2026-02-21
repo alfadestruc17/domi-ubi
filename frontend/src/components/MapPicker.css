@@ -44,3 +44,10 @@
 .map-picker-dest {
   background: #e94560;
 }
+
+/* Punto "estás aquí" cuando se usa geolocalización */
+.map-picker-mylocation {
+  background: #3b82f6;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
